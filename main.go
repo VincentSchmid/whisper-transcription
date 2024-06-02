@@ -16,7 +16,6 @@ import (
 
 const (
 	dataDir   = "./data"
-	outputDir = "./output"
 
 	videoDir               = dataDir + "/1-video"
 	audioDir               = dataDir + "/2-audio"
