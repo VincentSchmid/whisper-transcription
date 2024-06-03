@@ -25,8 +25,12 @@ func ConcatSubs(subs subtitles.Subtitle, lengthInSec int) subtitles.Subtitle {
 			}
 
 			newSubs.Captions = append(newSubs.Captions, tmpCaption)
-			startTime = subs.Captions[i+1].Start
-			captionText = make([]string, 0)
+
+			if i+1 < len(subs.Captions) {
+				startTime = subs.Captions[i+1].Start
+				captionText = make([]string, 0)
+			}
+			
 		}
 	}
 	return newSubs
