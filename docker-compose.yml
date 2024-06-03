@@ -1,0 +1,10 @@
+services:
+  transcriber:
+    build: .
+    container_name: transcriber
+    env_file:
+    - path: .env
+    volumes:
+      - type: bind
+        source: ./data
+        target: /app/data

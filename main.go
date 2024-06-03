@@ -8,29 +8,37 @@ import (
 	"strings"
 
 	helpers "gihtub.com/VincentSchmid/whisper-transcription/pkg"
-	"github.com/joho/godotenv"
 	subtitles "github.com/martinlindhe/subtitles"
 	openai "github.com/sashabaranov/go-openai"
 )
 
-const (
-	dataDir = "./data"
-
-	videoDir            = dataDir + "/1-video"
-	audioDir            = dataDir + "/2-audio"
-	transcriptionDir    = dataDir + "/3-transcription"
-	gptResultDir        = dataDir + "/4-gpt_result"
-	transcribePrompt    = "Es chömed Jugendlichi vor allem wo Risikoverhalte zeige, meischtens suizidali Jugendlichi, selte au Jugendlichi wo anderi bedrohe oder dor ihres Verhalte sich und anderi bedrohe. Do chas ned warte, die müend sofort igschätzt werde, wenn das kombiniert isch mit ere psychiatrische Uffälligkei. Aber es git au Störigsbilder wie Essstörige, schwerschti Depressione, manische Zustandsbilder oder Psychose, wo zwar au ned suizidal si müend, aber die chönnd au ned warte uf e reguläre Termin, au die chömed zu mir."
-	chatGptPrompt       = "Übersetze die Text wort für wort is schwiizerdütsch. Lahne d'timestamps bestah."
-	transcriptionSuffix = "_condensed"
+var (
+	dataDir            string
+	videoDir           string
+	audioDir           string
+	transcriptionDir   string
+	gptResultDir       string
+	transcribePrompt   string
+	chatGptPrompt      string
+	transcriptionSuffix string
 )
 
-func main() {
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+func init() {
+	dataDir = os.Getenv("DATA_DIR")
+	videoDir = os.Getenv("VIDEO_DIR")
+	audioDir = os.Getenv("AUDIO_DIR")
+	transcriptionDir = os.Getenv("TRANSCRIPTION_DIR")
+	gptResultDir = os.Getenv("GPT_RESULT_DIR")
+	transcribePrompt = os.Getenv("TRANSCRIBE_PROMPT")
+	chatGptPrompt = os.Getenv("CHAT_GPT_PROMPT")
+	transcriptionSuffix = os.Getenv("TRANSCRIPTION_SUFFIX")
 
+	if dataDir == "" || videoDir == "" || audioDir == "" || transcriptionDir == "" || gptResultDir == "" || transcribePrompt == "" || chatGptPrompt == "" || transcriptionSuffix == "" {
+		log.Fatalf("One or more environment variables are not set")
+	}
+}
+
+func main() {
 	openaiKey := os.Getenv("OPENAI_API_KEY")
 	if openaiKey == "" {
 		log.Fatalf("OPENAI_API_KEY is not set")
@@ -40,7 +48,7 @@ func main() {
 
 	createFolders()
 
-	err = convertVideoFilesToAudio(videoDir, audioDir)
+	err := convertVideoFilesToAudio(videoDir, audioDir)
 	if err != nil {
 		log.Println(err)
 	}
@@ -77,29 +85,13 @@ func createFolders() {
 	}
 }
 
-func fileExists(parentFolderDir string, fileName string) bool {
-	// Create the full file path by joining the parent folder directory and the file name
-	fullFilePath := filepath.Join(parentFolderDir, fileName)
-
-	// Use os.Stat to get the file info
-	_, err := os.Stat(fullFilePath)
-
-	// If os.Stat returns an error and the error is of type os.ErrNotExist, the file does not exist
-	if os.IsNotExist(err) {
-		return false
-	}
-
-	// If there's no error, or an error other than os.ErrNotExist, we assume the file exists
-	return err == nil
-}
-
 func convertVideoFilesToAudio(inputDir string, outputDir string) error {
 	return filepath.Walk(inputDir, func(path string, info os.FileInfo, err error) error {
 		if !info.IsDir() {
 			baseName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
 			audioFilePath := filepath.Join(outputDir, baseName+".mp3")
 
-			if !fileExists(outputDir, baseName+".mp3") {
+			if !helpers.FileExists(outputDir, baseName+".mp3") {
 				log.Printf("Converting %s to audio...\n", path)
 				helpers.ConvertVideoToAudio(path, audioFilePath, 128)
 			} else {
@@ -119,7 +111,7 @@ func transcribeAudioFiles(openaiClient *openai.Client, inputDir string, condesed
 			transcriptionPath := filepath.Join(outputDir, baseName+".vtt")
 			condensedTranscriptionPath := filepath.Join(outputDir, baseName+condesedSuffix+".vtt")
 
-			if !fileExists(outputDir, baseName+condesedSuffix+".vtt") {
+			if !helpers.FileExists(outputDir, baseName+condesedSuffix+".vtt") {
 				log.Printf("Transcribing audio file %s...\n", path)
 				transcription := helpers.Transcribe(openaiClient, transcribePrompt, path)
 
@@ -154,7 +146,7 @@ func translateTranscriptions(openaiClient *openai.Client, inputDir string, fileS
 
 			if strings.HasSuffix(baseName, fileSuffix) {
 
-				if !fileExists(outputDir, baseName+".txt") {
+				if !helpers.FileExists(outputDir, baseName+".txt") {
 					log.Printf("Reading Transcription from %s...\n", path)
 					transcriptionBytes, err := os.ReadFile(path)
 

@@ -7,18 +7,11 @@ import (
 )
 
 func FileExists(parentFolderDir string, fileName string) bool {
-	// Create the full file path by joining the parent folder directory and the file name
 	fullFilePath := filepath.Join(parentFolderDir, fileName)
-
-	// Use os.Stat to get the file info
 	_, err := os.Stat(fullFilePath)
-
-	// If os.Stat returns an error and the error is of type os.ErrNotExist, the file does not exist
 	if os.IsNotExist(err) {
 		return false
 	}
-
-	// If there's no error, or an error other than os.ErrNotExist, we assume the file exists
 	return err == nil
 }
 
