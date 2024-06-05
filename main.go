@@ -13,19 +13,19 @@ import (
 )
 
 var (
-	dataDir            string
-	videoDir           string
-	audioDir           string
-	transcriptionDir   string
-	gptResultDir       string
-	transcribePrompt   string
-	chatGptPrompt      string
+	openaiKey           string
+	dataDir             string
+	audioDir            string
+	transcriptionDir    string
+	gptResultDir        string
+	transcribePrompt    string
+	chatGptPrompt       string
 	transcriptionSuffix string
 )
 
 func init() {
+	openaiKey = os.Getenv("OPENAI_API_KEY")
 	dataDir = os.Getenv("DATA_DIR")
-	videoDir = os.Getenv("VIDEO_DIR")
 	audioDir = os.Getenv("AUDIO_DIR")
 	transcriptionDir = os.Getenv("TRANSCRIPTION_DIR")
 	gptResultDir = os.Getenv("GPT_RESULT_DIR")
@@ -33,27 +33,17 @@ func init() {
 	chatGptPrompt = os.Getenv("CHAT_GPT_PROMPT")
 	transcriptionSuffix = os.Getenv("TRANSCRIPTION_SUFFIX")
 
-	if dataDir == "" || videoDir == "" || audioDir == "" || transcriptionDir == "" || gptResultDir == "" || transcribePrompt == "" || chatGptPrompt == "" || transcriptionSuffix == "" {
+	if openaiKey == "" || dataDir == "" || audioDir == "" || transcriptionDir == "" || gptResultDir == "" || transcribePrompt == "" || chatGptPrompt == "" || transcriptionSuffix == "" {
 		log.Fatalf("One or more environment variables are not set")
 	}
 }
 
 func main() {
-	openaiKey := os.Getenv("OPENAI_API_KEY")
-	if openaiKey == "" {
-		log.Fatalf("OPENAI_API_KEY is not set")
-	}
-
 	openaiClient := openai.NewClient(openaiKey)
 
 	createFolders()
 
-	err := convertVideoFilesToAudio(videoDir, audioDir)
-	if err != nil {
-		log.Println(err)
-	}
-
-	err = transcribeAudioFiles(openaiClient, audioDir, transcriptionSuffix, transcriptionDir)
+	err := transcribeAudioFiles(openaiClient, audioDir, transcriptionSuffix, transcriptionDir)
 	if err != nil {
 		log.Println(err)
 	}
@@ -67,40 +57,17 @@ func main() {
 }
 
 func createFolders() {
-	log.Println("Creating data directories...")
-	if err := os.MkdirAll(filepath.Join(videoDir), os.ModePerm); err != nil {
-		log.Fatalf("Failed to create video directory: %v", err)
-	}
-
-	if err := os.MkdirAll(filepath.Join(audioDir), os.ModePerm); err != nil {
+	if err := os.MkdirAll(audioDir, os.ModePerm); err != nil {
 		log.Fatalf("Failed to create audio directory: %v", err)
 	}
 
-	if err := os.MkdirAll(filepath.Join(transcriptionDir), os.ModePerm); err != nil {
+	if err := os.MkdirAll(transcriptionDir, os.ModePerm); err != nil {
 		log.Fatalf("Failed to create transcription directory: %v", err)
 	}
 
-	if err := os.MkdirAll(filepath.Join(gptResultDir), os.ModePerm); err != nil {
+	if err := os.MkdirAll(gptResultDir, os.ModePerm); err != nil {
 		log.Fatalf("Failed to create GPT result directory: %v", err)
 	}
-}
-
-func convertVideoFilesToAudio(inputDir string, outputDir string) error {
-	return filepath.Walk(inputDir, func(path string, info os.FileInfo, err error) error {
-		if !info.IsDir() {
-			baseName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			audioFilePath := filepath.Join(outputDir, baseName+".mp3")
-
-			if !helpers.FileExists(outputDir, baseName+".mp3") {
-				log.Printf("Converting %s to audio...\n", path)
-				helpers.ConvertVideoToAudio(path, audioFilePath, 128)
-			} else {
-				log.Printf("File %s already exists\n", audioFilePath)
-			}
-		}
-
-		return nil
-	})
 }
 
 func transcribeAudioFiles(openaiClient *openai.Client, inputDir string, condesedSuffix string, outputDir string) error {
