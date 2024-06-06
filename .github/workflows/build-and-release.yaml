@@ -77,13 +77,9 @@ jobs:
         run: chmod +x ./dist/${{ env.APP_NAME }}-darwin
 
       - name: Add config.env file
-        run: cp config.env ./dist
-
-      - name: Create zip files for release
         run: |
-          cd dist
-          zip ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env
-          zip ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env
+          cp config.env ./dist
+          chmod +r ./dist/config.env
 
       - name: Create empty data folders
         run: |
