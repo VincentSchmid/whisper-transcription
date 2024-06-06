@@ -28,7 +28,7 @@ Dann wird das Resultat an ChatGPT gesendet, wo es dann so genau wie möglich ins
 
 ### Ausführen
 - audio files in the data/audio ordner kopieren
-- Programm ausführen
+- Programm ausführen (Auf mac muss man möglicherweise in Settings > Privacy & Securtiy > Open Anyway klicken)
 
 ## Konfiguration config.env
 ### AUDIO_DIR
