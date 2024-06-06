@@ -25,10 +25,10 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up Go
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: 1.22
 
@@ -42,14 +42,14 @@ jobs:
 
       - name: Upload binaries for Windows
         if: matrix.goos == 'windows'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-windows.exe
           path: ${{ env.APP_NAME }}-windows.exe
 
       - name: Upload binaries for macOS
         if: matrix.goos == 'darwin'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-darwin
           path: ${{ env.APP_NAME }}-darwin
@@ -60,21 +60,27 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Download windows binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-windows.exe
           path: ./dist
       - name: Download macOS binary
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ${{ env.APP_NAME }}-darwin
           path: ./dist
 
       - name: Add .env file
         run: cp .env ./dist
+
+      - name: Create zip files for release
+        run: |
+          cd dist
+          zip ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe .env
+          zip ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin .env
 
       - name: Create GitHub Release
         id: create_release
@@ -87,32 +93,22 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Upload Release Asset for Windows
+      - name: Upload Windows zip file
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.APP_NAME }}-windows.exe
-          asset_name: ${{ env.APP_NAME }}-windows.exe
-          asset_content_type: application/octet-stream
+          asset_path: ./dist/${{ env.APP_NAME }}-windows.zip
+          asset_name: ${{ env.APP_NAME }}-windows.zip
+          asset_content_type: application/zip
 
-      - name: Upload Release Asset for macOS
+      - name: Upload macOS zip file
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.APP_NAME }}-darwin
-          asset_name: ${{ env.APP_NAME }}-macOS
-          asset_content_type: application/octet-stream
-
-      - name: Upload .env file
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: .env
-          asset_name: .env
-          asset_content_type: application/octet-stream
+          asset_path: ./dist/${{ env.APP_NAME }}-macOS.zip
+          asset_name: ${{ env.APP_NAME }}-macOS.zip
+          asset_content_type: application/zip
