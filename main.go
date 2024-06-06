@@ -39,7 +39,7 @@ func init() {
 	chatGptPrompt = loadEnv("CHAT_GPT_PROMPT")
 
 	if _, err := os.Stat(audioDir); os.IsNotExist(err) {
-		log.Fatalf("AUDIO_DIR %s does not exist", audioDir)
+		log.Printf("AUDIO_DIR %s does not exist", audioDir)
 	}
 }
 
