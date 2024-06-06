@@ -1,5 +1,11 @@
 name: Build and Release Go Binaries
 
+
+permissions:
+  contents: write
+  packages: write
+  deployments: write
+
 on:
   push:
     tags:
