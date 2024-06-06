@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	helpers "gihtub.com/VincentSchmid/whisper-transcription/pkg"
+	"github.com/joho/godotenv"
 	subtitles "github.com/martinlindhe/subtitles"
 	openai "github.com/sashabaranov/go-openai"
 )
@@ -31,6 +32,11 @@ func loadEnv(key string) string {
 }
 
 func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+
 	openaiKey = loadEnv("OPENAI_API_KEY")
 	audioDir = loadEnv("AUDIO_DIR")
 	transcriptionDir = loadEnv("TRANSCRIPTION_DIR")
