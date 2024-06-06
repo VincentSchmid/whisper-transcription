@@ -73,14 +73,25 @@ jobs:
           name: ${{ env.APP_NAME }}-darwin
           path: ./dist
 
-      - name: Add .env file
-        run: cp .env ./dist
+      - name: Add config.env file
+        run: cp config.env ./dist
 
       - name: Create zip files for release
         run: |
           cd dist
-          zip ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe .env
-          zip ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin .env
+          zip ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env
+          zip ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env
+
+      - name: Create empty data folders
+        run: |
+          mkdir -p ./dist/data/audio ./dist/data/video ./dist/data/transcription
+  
+      - name: Create zip files for release
+        run: |
+          cd dist
+          zip -r ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env data/audio data/video data/transcription
+          zip -r ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env data/audio data/video data/transcription
+  
 
       - name: Create GitHub Release
         id: create_release
