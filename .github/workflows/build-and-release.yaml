@@ -72,6 +72,9 @@ jobs:
         with:
           name: ${{ env.APP_NAME }}-darwin
           path: ./dist
+      
+      - name: Make macOS binary executable
+        run: chmod +x ./dist/${{ env.APP_NAME }}-darwin
 
       - name: Add config.env file
         run: cp config.env ./dist
