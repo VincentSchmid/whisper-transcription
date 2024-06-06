@@ -14,27 +14,32 @@ import (
 
 var (
 	openaiKey           string
-	dataDir             string
 	audioDir            string
 	transcriptionDir    string
 	gptResultDir        string
 	transcribePrompt    string
 	chatGptPrompt       string
-	transcriptionSuffix string
+	transcriptionSuffix = "_restructured"
 )
 
-func init() {
-	openaiKey = os.Getenv("OPENAI_API_KEY")
-	dataDir = os.Getenv("DATA_DIR")
-	audioDir = os.Getenv("AUDIO_DIR")
-	transcriptionDir = os.Getenv("TRANSCRIPTION_DIR")
-	gptResultDir = os.Getenv("GPT_RESULT_DIR")
-	transcribePrompt = os.Getenv("TRANSCRIBE_PROMPT")
-	chatGptPrompt = os.Getenv("CHAT_GPT_PROMPT")
-	transcriptionSuffix = os.Getenv("TRANSCRIPTION_SUFFIX")
+func loadEnv(key string) string {
+	value := os.Getenv(key)
+	if value == "" {
+		log.Fatalf("%s is required", key)
+	}
+	return value
+}
 
-	if openaiKey == "" || dataDir == "" || audioDir == "" || transcriptionDir == "" || gptResultDir == "" || transcribePrompt == "" || chatGptPrompt == "" || transcriptionSuffix == "" {
-		log.Fatalf("One or more environment variables are not set")
+func init() {
+	openaiKey = loadEnv("OPENAI_API_KEY")
+	audioDir = loadEnv("AUDIO_DIR")
+	transcriptionDir = loadEnv("TRANSCRIPTION_DIR")
+	gptResultDir = loadEnv("GPT_RESULT_DIR")
+	transcribePrompt = loadEnv("TRANSCRIBE_PROMPT")
+	chatGptPrompt = loadEnv("CHAT_GPT_PROMPT")
+
+	if _, err := os.Stat(audioDir); os.IsNotExist(err) {
+		log.Fatalf("AUDIO_DIR %s does not exist", audioDir)
 	}
 }
 
