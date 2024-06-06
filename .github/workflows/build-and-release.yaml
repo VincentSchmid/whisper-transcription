@@ -84,13 +84,13 @@ jobs:
 
       - name: Create empty data folders
         run: |
-          mkdir -p ./dist/data/audio ./dist/data/video ./dist/data/transcription
+          mkdir -p ./dist/data/audio ./dist/data/output ./dist/data/transcription
   
       - name: Create zip files for release
         run: |
           cd dist
-          zip -r ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env data/audio data/video data/transcription
-          zip -r ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env data/audio data/video data/transcription
+          zip -r ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env data/audio data/output data/transcription
+          zip -r ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env data/audio data/output data/transcription
   
 
       - name: Create GitHub Release

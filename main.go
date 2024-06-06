@@ -17,7 +17,7 @@ var (
 	openaiKey           string
 	audioDir            string
 	transcriptionDir    string
-	gptResultDir        string
+	outputDir           string
 	transcribePrompt    string
 	chatGptPrompt       string
 	transcriptionSuffix = "_restructured"
@@ -40,7 +40,7 @@ func init() {
 	openaiKey = loadEnv("OPENAI_API_KEY")
 	audioDir = loadEnv("AUDIO_DIR")
 	transcriptionDir = loadEnv("TRANSCRIPTION_DIR")
-	gptResultDir = loadEnv("GPT_RESULT_DIR")
+	outputDir = loadEnv("OUTPUT_DIR")
 	transcribePrompt = loadEnv("TRANSCRIBE_PROMPT")
 	chatGptPrompt = loadEnv("CHAT_GPT_PROMPT")
 
@@ -59,7 +59,7 @@ func main() {
 		log.Println(err)
 	}
 
-	err = translateTranscriptions(openaiClient, transcriptionDir, transcriptionSuffix, gptResultDir)
+	err = translateTranscriptions(openaiClient, transcriptionDir, transcriptionSuffix, outputDir)
 	if err != nil {
 		log.Println(err)
 	}
@@ -76,7 +76,7 @@ func createFolders() {
 		log.Fatalf("Failed to create transcription directory: %v", err)
 	}
 
-	if err := os.MkdirAll(gptResultDir, os.ModePerm); err != nil {
+	if err := os.MkdirAll(outputDir, os.ModePerm); err != nil {
 		log.Fatalf("Failed to create GPT result directory: %v", err)
 	}
 }
