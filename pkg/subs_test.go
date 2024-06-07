@@ -25,6 +25,7 @@ func TestShorterThanConcatRange(t *testing.T) {
 	condensedTranscript := ConcatSubs(subs, 30)
 
 	assert.Equal(t, 1, len(condensedTranscript.Captions))
+	assert.Equal(t, 2, len(condensedTranscript.Captions[0].Text))
 }
 
 func TestExactConcatRange(t *testing.T) {
@@ -36,4 +37,5 @@ func TestExactConcatRange(t *testing.T) {
 	condensedTranscript := ConcatSubs(subs, 20)
 
 	assert.Equal(t, 1, len(condensedTranscript.Captions))
+	assert.Equal(t, 2, len(condensedTranscript.Captions[0].Text))
 }
