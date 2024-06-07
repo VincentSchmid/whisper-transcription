@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strconv"
 	"strings"
 
 	helpers "gihtub.com/VincentSchmid/whisper-transcription/pkg"
@@ -14,14 +15,15 @@ import (
 )
 
 var (
-	exeDir              string
-	openaiKey           string
-	audioDir            string
-	transcriptionDir    string
-	outputDir           string
-	transcribePrompt    string
-	chatGptPrompt       string
-	transcriptionSuffix = "_restructured"
+	exeDir                  string
+	openaiKey               string
+	SubTitleTimeGranularity int
+	audioDir                string
+	transcriptionDir        string
+	outputDir               string
+	transcribePrompt        string
+	chatGptPrompt           string
+	transcriptionSuffix     = "_restructured"
 )
 
 func loadEnv(key string) string {
@@ -34,12 +36,12 @@ func loadEnv(key string) string {
 
 func loadConfigFile() {
 	exePath, err := os.Executable()
-    if err != nil {
-        log.Fatalf("Failed to get executable path: %v", err)
-    }
+	if err != nil {
+		log.Fatalf("Failed to get executable path: %v", err)
+	}
 
-    exeDir = filepath.Dir(exePath)
-    envPath := filepath.Join(exeDir, "config.env")
+	exeDir = filepath.Dir(exePath)
+	envPath := filepath.Join(exeDir, "config.env")
 
 	err = godotenv.Load(envPath)
 	if err != nil {
@@ -48,6 +50,8 @@ func loadConfigFile() {
 }
 
 func init() {
+	var err error
+
 	loadConfigFile()
 
 	openaiKey = loadEnv("OPENAI_API_KEY")
@@ -56,6 +60,10 @@ func init() {
 	outputDir = loadEnv("OUTPUT_DIR")
 	transcribePrompt = loadEnv("TRANSCRIBE_PROMPT")
 	chatGptPrompt = loadEnv("CHAT_GPT_PROMPT")
+	SubTitleTimeGranularity, err = strconv.Atoi("SUBTITLE_TIME_GRANULARITY")
+	if err != nil {
+		log.Fatalf("Failed to parse SUBTITLE_TIME_GRANULARITY: %v", err)
+	}
 
 	// if is not absolute path, make it absolute
 	if !filepath.IsAbs(audioDir) {
@@ -128,7 +136,7 @@ func transcribeAudioFiles(openaiClient *openai.Client, inputDir string, condesed
 					return fmt.Errorf("error reading SRT file: %w", err)
 				}
 
-				condensedTranscript := helpers.ConcatSubs(subs, 30)
+				condensedTranscript := helpers.ConcatSubs(subs, SubTitleTimeGranularity)
 
 				log.Printf("Writing condensed transcription to %s...\n", condensedTranscriptionPath)
 				helpers.WriteFile(condensedTranscriptionPath, condensedTranscript.AsSRT())
