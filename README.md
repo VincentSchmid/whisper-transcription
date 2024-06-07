@@ -42,8 +42,8 @@ Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert d
 | Variable                   | Beschreibung                                                                                 | Standardwert        |
 |----------------------------|----------------------------------------------------------------------------------------------|---------------------|
 | AUDIO_DIR                  | Pfad zum Ordner, wo die Audiodateien liegen. Audiodateien dort hin kopieren.                 | `data/audio`        |
-| TRANSCRIPTION_DIR          | Pfad zum Ordner, wo die Zwischenschritte der Transkription gespeichert werden sollen.        |                     |
-| OUTPUT_DIR                 | Pfad zum Ordner, wo das Endergebnis gespeichert werden soll.                                 |                     |
+| TRANSCRIPTION_DIR          | Pfad zum Ordner, wo die Zwischenschritte der Transkription gespeichert werden sollen.        | `data/transcription`|
+| OUTPUT_DIR                 | Pfad zum Ordner, wo das Endergebnis gespeichert werden soll.                                 | `data/output`       |
 | TRANSCRIBE_PROMPT          | Prompt, welcher der Transkriptions-KI mitgegeben wird, um das Resultat zu steuern.           |                     |
 | CHAT_GPT_PROMPT            | Anweisung an ChatGPT, um den Text ins Schweizerdeutsch zu übersetzen.                        |                     |
 | OPENAI_API_KEY             | Key, um die OpenAI API zu nutzen. Oben beschrieben, wie dieser Key generiert werden kann.    |                     |
