@@ -27,7 +27,6 @@ Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert d
 
 ### Ausführen
 1. Audiodateien in den Ordner `data/audio` kopieren
-2. Programm ausführen
 
 #### macOS
 1. Swissgerman-Transcription-Darwin ausführen
