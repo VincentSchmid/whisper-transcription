@@ -1,6 +1,5 @@
 name: Build and Release Go Binaries
 
-
 permissions:
   contents: write
   packages: write
@@ -90,35 +89,18 @@ jobs:
           cd dist
           zip -r ${{ env.APP_NAME }}-windows.zip ${{ env.APP_NAME }}-windows.exe config.env data/audio data/output data/transcription
           zip -r ${{ env.APP_NAME }}-macOS.zip ${{ env.APP_NAME }}-darwin config.env data/audio data/output data/transcription
-  
 
       - name: Create GitHub Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          make_latest: true
           draft: false
           prerelease: false
-
-      - name: Upload Windows zip file
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.APP_NAME }}-windows.zip
-          asset_name: ${{ env.APP_NAME }}-windows.zip
-          asset_content_type: application/zip
-
-      - name: Upload macOS zip file
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/${{ env.APP_NAME }}-macOS.zip
-          asset_name: ${{ env.APP_NAME }}-macOS.zip
-          asset_content_type: application/zip
+          files: |
+            ./dist/${{ env.APP_NAME }}-windows.zip
+            ./dist/${{ env.APP_NAME }}-macOS.zip
