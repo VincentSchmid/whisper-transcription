@@ -3,7 +3,7 @@
 ## Beschreibung
 Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert die Texte mit genauer Zeitangabe. Jedoch sind die Texte dann nicht zwingend auf Schweizerdeutsch. Anschliessend wird das Resultat an ChatGPT gesendet, um es so genau wie möglich ins Schweizerdeutsch zu übersetzen.
 
-## Anforderungen
+## Setup-Guide
 
 ### OpenAI Key erstellen
 1. Account erstellen bei OpenAI: [OpenAI](https://openai.com/)
