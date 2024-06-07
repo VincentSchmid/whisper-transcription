@@ -38,22 +38,13 @@ Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert d
 2. Bei einem blauen Fenster: Weitere Informationen > Trotzdem ausführen
 
 ## Konfiguration `config.env`
-### AUDIO_DIR
-Pfad zum Ordner, wo die Audiodateien liegen. Standardmässig `data/audio`. Audiodateien dort hin kopieren.
 
-### TRANSCRIPTION_DIR
-Pfad zum Ordner, wo die Zwischenschritte der Transkription gespeichert werden sollen.
-
-### OUTPUT_DIR
-Pfad zum Ordner, wo das Endergebnis gespeichert werden soll.
-
-### TRANSCRIBE_PROMPT
-Prompt, welcher der Transkriptions-KI mitgegeben wird, um das Resultat zu steuern.
-
-### CHAT_GPT_PROMPT
-Anweisung an ChatGPT, um den Text ins Schweizerdeutsch zu übersetzen.
-
-### OPENAI_API_KEY
-Key, um die OpenAI API zu nutzen. Oben beschrieben, wie dieser Key generiert werden kann. 
-### SUBTITLE_TIME_GRANULARITY
-Angabe in Sekunden, wie Granular die Zeitblocke sein müssen. Default 30 sekunden
+| Variable                   | Beschreibung                                                                                 | Standardwert        |
+|----------------------------|----------------------------------------------------------------------------------------------|---------------------|
+| AUDIO_DIR                  | Pfad zum Ordner, wo die Audiodateien liegen. Audiodateien dort hin kopieren.                 | `data/audio`        |
+| TRANSCRIPTION_DIR          | Pfad zum Ordner, wo die Zwischenschritte der Transkription gespeichert werden sollen.        |                     |
+| OUTPUT_DIR                 | Pfad zum Ordner, wo das Endergebnis gespeichert werden soll.                                 |                     |
+| TRANSCRIBE_PROMPT          | Prompt, welcher der Transkriptions-KI mitgegeben wird, um das Resultat zu steuern.           |                     |
+| CHAT_GPT_PROMPT            | Anweisung an ChatGPT, um den Text ins Schweizerdeutsch zu übersetzen.                        |                     |
+| OPENAI_API_KEY             | Key, um die OpenAI API zu nutzen. Oben beschrieben, wie dieser Key generiert werden kann.    |                     |
+| SUBTITLE_TIME_GRANULARITY  | Angabe in Sekunden, wie Granular die Zeitblocke sein müssen.                                 | 30 Sekunden         |
