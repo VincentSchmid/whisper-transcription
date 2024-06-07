@@ -31,7 +31,7 @@ func loadEnv(key string) string {
 	return value
 }
 
-func init() {
+func loadConfigFile() {
 	exePath, err := os.Executable()
     if err != nil {
         log.Fatalf("Failed to get executable path: %v", err)
@@ -44,6 +44,10 @@ func init() {
 	if err != nil {
 		log.Fatalf("Error loading config.env file")
 	}
+}
+
+func init() {
+	loadConfigFile()
 
 	openaiKey = loadEnv("OPENAI_API_KEY")
 	audioDir = loadEnv("AUDIO_DIR")
