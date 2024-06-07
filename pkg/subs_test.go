@@ -39,3 +39,15 @@ func TestExactConcatRange(t *testing.T) {
 	assert.Equal(t, 1, len(condensedTranscript.Captions))
 	assert.Equal(t, 2, len(condensedTranscript.Captions[0].Text))
 }
+
+func TestGreaterThanConcatRange(t *testing.T) {
+	subs, err := subtitles.NewFromVTT(shortFile)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	condensedTranscript := ConcatSubs(subs, 1)
+
+	assert.Equal(t, 2, len(condensedTranscript.Captions))
+	assert.Equal(t, 1, len(condensedTranscript.Captions[0].Text))
+}

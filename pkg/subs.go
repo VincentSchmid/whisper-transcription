@@ -14,10 +14,9 @@ func ConcatSubs(subs subtitles.Subtitle, lengthInSec int) subtitles.Subtitle {
 	captionText := make([]string, 0)
 
 	for i, caption := range subs.Captions {
-		if caption.End.Sub(startTime).Seconds() <= float64(lengthInSec) {
-			captionText = append(captionText, caption.Text...)
+		captionText = append(captionText, caption.Text...)
 
-		} else {
+		if caption.End.Sub(startTime).Seconds() > float64(lengthInSec) || i+1 == len(subs.Captions) {
 			tmpCaption = subtitles.Caption{
 				Start: startTime,
 				End:   caption.End,
@@ -25,22 +24,8 @@ func ConcatSubs(subs subtitles.Subtitle, lengthInSec int) subtitles.Subtitle {
 			}
 
 			newSubs.Captions = append(newSubs.Captions, tmpCaption)
-
-			if i+1 < len(subs.Captions) {
-				startTime = subs.Captions[i+1].Start
-				captionText = make([]string, 0)
-			}
-			
 		}
 	}
-
-	tmpCaption = subtitles.Caption{
-		Start: startTime,
-		End:   subs.Captions[len(subs.Captions)-1].End,
-		Text:  captionText,
-	}
-
-	newSubs.Captions = append(newSubs.Captions, tmpCaption)
 
 	return newSubs
 }

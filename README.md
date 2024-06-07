@@ -48,3 +48,6 @@ Anweisung an Chat GPT um die Text ins Schweizerdeutsch zu übersetzen
 
 ### OPENAI_API_KEY
 Key um die OpenAI API zu nutzen. Oben beschrieben wie dieser Key generiert werden kann.
+
+### SUBTITLE_TIME_GRANULARITY
+Angabe in Sekunden, wie Granular die Zeitblocke sein müssen. Default 30 sekunden
