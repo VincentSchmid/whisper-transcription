@@ -28,7 +28,15 @@ Dann wird das Resultat an ChatGPT gesendet, wo es dann so genau wie möglich ins
 
 ### Ausführen
 - audio files in the data/audio ordner kopieren
-- Programm ausführen (Auf mac muss man möglicherweise in Settings > Privacy & Securtiy > Open Anyway klicken)
+- Programm ausführen
+
+#### macOS
+- swissgerman-transcription-darwin ausführen
+- Bei einem Fehler: Settings > Privacy & Securtiy > Open Anyway klicken)
+
+#### windows
+- swissgerman-transcription-windows ausführen
+- Bei einem blauen fenster: weitere informationen > trotzdem ausführen
 
 ## Konfiguration config.env
 ### AUDIO_DIR
