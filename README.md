@@ -1,61 +1,59 @@
-# whisper-transcription
+# Whisper-Transkription
 
 ## Beschreibung
-Dieses Script sendet die Audio files an OpenAI Whisper. Whisper transkibiert die Texte mit genauer Zeitangabe. Jedoch sind die Texte dann nicht zwingend auf Schweizerdeutsch.
-Dann wird das Resultat an ChatGPT gesendet, wo es dann so genau wie möglich ins Schweizerdeutsch übersetzt wird.
+Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert die Texte mit genauer Zeitangabe. Jedoch sind die Texte dann nicht zwingend auf Schweizerdeutsch. Anschliessend wird das Resultat an ChatGPT gesendet, um es so genau wie möglich ins Schweizerdeutsch zu übersetzen.
 
 ## Anforderungen
 
-### Openai Key erstellen
-- Account erstellen bei openai: https://openai.com/
-- hier hin gehen: https://platform.openai.com/docs/overview
-- Navigieren Dashboard > API Key > create new secret key
-- names definieren > create
-- den key kopieren (wird für später benötigt)
+### OpenAI Key erstellen
+1. Account erstellen bei OpenAI: [OpenAI](https://openai.com/)
+2. Navigieren zu: [OpenAI Platform](https://platform.openai.com/docs/overview)
+3. Dashboard > API Key > Create new secret key
+4. Name definieren > Create
+5. Den Key kopieren (dieser wird später benötigt)
 
 #### Zahlungsmethode hinterlegen
-- Zahnrad Symbol (settings) > Billing > Payment Method > Add payment method
+1. Zahnrad-Symbol (Settings) > Billing > Payment Method > Add payment method
 
 ### Applikation herunterladen
-- hier ist der download: https://github.com/VincentSchmid/whisper-transcription/releases/latest
-- unter Assets: mac oder windows Version auswählen und herunterladen (.zip)
-- Ordnerinhalt entpacken
+1. Download von: [Whisper Transcription Releases](https://github.com/VincentSchmid/whisper-transcription/releases/latest)
+2. Unter Assets: macOS oder Windows Version auswählen und herunterladen (.zip)
+3. Ordnerinhalt entpacken
 
 ### Konfiguration anpassen
-- `config.env` file öffnen mit einem Text Editor
-- Den OpenAI Key ersetzen auf dieser Zeile: `OPENAI_API_KEY=<kopierten openai key>` einfügen (auch die klammern eretzen). Sollte so aussehen:`OPENAI_API_KEY=sp-proj-...`
-- Restliche Konfiguration nach belieben anpassen
+1. `config.env` Datei mit einem Texteditor öffnen
+2. Den OpenAI Key in dieser Zeile einfügen: `OPENAI_API_KEY=<kopierter openai key>` (auch die Klammern entfernen). Es sollte so aussehen: `OPENAI_API_KEY=sp-proj-...`
+3. Restliche Konfiguration nach Belieben anpassen
 
 ### Ausführen
-- audio files in the data/audio ordner kopieren
-- Programm ausführen
+1. Audiodateien in den Ordner `data/audio` kopieren
+2. Programm ausführen
 
 #### macOS
-- swissgerman-transcription-darwin ausführen
-- Bei einem Fehler: Settings > Privacy & Securtiy > Open Anyway klicken)
+1. Swissgerman-Transcription-Darwin ausführen
+2. Bei einem Fehler: Einstellungen > Datenschutz & Sicherheit > Trotzdem öffnen klicken
 
-#### windows
-- swissgerman-transcription-windows ausführen
-- Bei einem blauen fenster: weitere informationen > trotzdem ausführen
+#### Windows
+1. Swissgerman-Transcription-Windows ausführen
+2. Bei einem blauen Fenster: Weitere Informationen > Trotzdem ausführen
 
-## Konfiguration config.env
+## Konfiguration `config.env`
 ### AUDIO_DIR
-Pfad zum Ordner wo die Audio Dateien Liegen. Per default `data/audio` Audio Files dort hin kopieren.
+Pfad zum Ordner, wo die Audiodateien liegen. Standardmässig `data/audio`. Audiodateien dort hin kopieren.
 
 ### TRANSCRIPTION_DIR
-Pfad zum Ordner wo die zwischenschritte der Transkription gespeichert werden sollen.
+Pfad zum Ordner, wo die Zwischenschritte der Transkription gespeichert werden sollen.
 
 ### OUTPUT_DIR
-Pfad zum Ordner wo das Endresultat gespeichert werden sollte.
+Pfad zum Ordner, wo das Endergebnis gespeichert werden soll.
 
 ### TRANSCRIBE_PROMPT
-Prompt welcher der Transkriptions AI Mitgegeben wird um das Resultat etwas zu steuern.
+Prompt, welcher der Transkriptions-KI mitgegeben wird, um das Resultat zu steuern.
 
 ### CHAT_GPT_PROMPT
-Anweisung an Chat GPT um die Text ins Schweizerdeutsch zu übersetzen
+Anweisung an ChatGPT, um den Text ins Schweizerdeutsch zu übersetzen.
 
 ### OPENAI_API_KEY
-Key um die OpenAI API zu nutzen. Oben beschrieben wie dieser Key generiert werden kann.
-
+Key, um die OpenAI API zu nutzen. Oben beschrieben, wie dieser Key generiert werden kann. 
 ### SUBTITLE_TIME_GRANULARITY
 Angabe in Sekunden, wie Granular die Zeitblocke sein müssen. Default 30 sekunden
