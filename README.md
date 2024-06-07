@@ -16,7 +16,7 @@ Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert d
 1. Zahnrad-Symbol (Settings) > Billing > Payment Method > Add payment method
 
 ### Applikation herunterladen
-1. Download von: [Whisper Transcription Releases](https://github.com/VincentSchmid/whisper-transcription/releases/latest)
+1. Download der Kompilierten Version dieses Skripts: [Whisper Transcription Releases](https://github.com/VincentSchmid/whisper-transcription/releases/latest)
 2. Unter Assets: macOS oder Windows Version auswählen und herunterladen (.zip)
 3. Ordnerinhalt entpacken
 
