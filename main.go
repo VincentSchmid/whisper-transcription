@@ -14,6 +14,7 @@ import (
 )
 
 var (
+	exeDir              string
 	openaiKey           string
 	audioDir            string
 	transcriptionDir    string
@@ -37,7 +38,7 @@ func loadConfigFile() {
         log.Fatalf("Failed to get executable path: %v", err)
     }
 
-    exeDir := filepath.Dir(exePath)
+    exeDir = filepath.Dir(exePath)
     envPath := filepath.Join(exeDir, "config.env")
 
 	err = godotenv.Load(envPath)
@@ -55,6 +56,19 @@ func init() {
 	outputDir = loadEnv("OUTPUT_DIR")
 	transcribePrompt = loadEnv("TRANSCRIBE_PROMPT")
 	chatGptPrompt = loadEnv("CHAT_GPT_PROMPT")
+
+	// if is not absolute path, make it absolute
+	if !filepath.IsAbs(audioDir) {
+		audioDir = filepath.Join(exeDir, audioDir)
+	}
+
+	if !filepath.IsAbs(transcriptionDir) {
+		transcriptionDir = filepath.Join(exeDir, transcriptionDir)
+	}
+
+	if !filepath.IsAbs(outputDir) {
+		outputDir = filepath.Join(exeDir, outputDir)
+	}
 
 	if _, err := os.Stat(audioDir); os.IsNotExist(err) {
 		log.Printf("AUDIO_DIR %s does not exist", audioDir)
