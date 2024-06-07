@@ -18,7 +18,7 @@ Dann wird das Resultat an ChatGPT gesendet, wo es dann so genau wie möglich ins
 
 ### Applikation herunterladen
 - hier ist der download: https://github.com/VincentSchmid/whisper-transcription/releases/latest
-- unter Assets mac oder windows version auswählen und herunterladen (.zip)
+- unter Assets: mac oder windows Version auswählen und herunterladen (.zip)
 - Ordnerinhalt entpacken
 
 ### Konfiguration anpassen
