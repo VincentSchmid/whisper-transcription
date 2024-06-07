@@ -23,7 +23,7 @@ Dann wird das Resultat an ChatGPT gesendet, wo es dann so genau wie möglich ins
 
 ### Konfiguration anpassen
 - `config.env` file öffnen mit einem Text Editor
-- Den OpenAI Key ersetzen auf dieser Zeile: `OPENAI_API_KEY=<kopierten openai key>` einfügen. Sollte so aussehen:`OPENAI_API_KEY=sp-proj-...`
+- Den OpenAI Key ersetzen auf dieser Zeile: `OPENAI_API_KEY=<kopierten openai key>` einfügen (auch die klammern eretzen). Sollte so aussehen:`OPENAI_API_KEY=sp-proj-...`
 - Restliche Konfiguration nach belieben anpassen
 
 ### Ausführen
