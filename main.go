@@ -32,7 +32,15 @@ func loadEnv(key string) string {
 }
 
 func init() {
-	err := godotenv.Load("config.env")
+	exePath, err := os.Executable()
+    if err != nil {
+        log.Fatalf("Failed to get executable path: %v", err)
+    }
+
+    exeDir := filepath.Dir(exePath)
+    envPath := filepath.Join(exeDir, "config.env")
+
+	err = godotenv.Load(envPath)
 	if err != nil {
 		log.Fatalf("Error loading config.env file")
 	}
