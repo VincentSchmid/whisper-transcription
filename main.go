@@ -15,6 +15,7 @@ import (
 )
 
 var (
+	devMode                 bool
 	exeDir                  string
 	openaiKey               string
 	SubTitleTimeGranularity int
@@ -26,6 +27,11 @@ var (
 	transcriptionSuffix     = "_restructured"
 )
 
+func checkEnv(key string) bool {
+	value := os.Getenv(key)
+	return value != ""
+}
+
 func loadEnv(key string) string {
 	value := os.Getenv(key)
 	if value == "" {
@@ -35,25 +41,35 @@ func loadEnv(key string) string {
 }
 
 func loadConfigFile() {
+	envPath := filepath.Join(exeDir, "config.env")
+	err := godotenv.Load(envPath)
+	if err != nil {
+		log.Fatalf("Error loading config.env file")
+	}
+}
+
+func logToFile() {
+	f, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+	}
+	defer f.Close()
+
+	log.SetOutput(f)
+}
+
+func init() {
 	exePath, err := os.Executable()
 	if err != nil {
 		log.Fatalf("Failed to get executable path: %v", err)
 	}
 
 	exeDir = filepath.Dir(exePath)
-	envPath := filepath.Join(exeDir, "config.env")
-
-	err = godotenv.Load(envPath)
-	if err != nil {
-		log.Fatalf("Error loading config.env file")
-	}
-}
-
-func init() {
-	var err error
 
 	loadConfigFile()
 
+	devMode = checkEnv("DEV_MODE")
 	openaiKey = loadEnv("OPENAI_API_KEY")
 	audioDir = loadEnv("AUDIO_DIR")
 	transcriptionDir = loadEnv("TRANSCRIPTION_DIR")
@@ -63,6 +79,10 @@ func init() {
 	SubTitleTimeGranularity, err = strconv.Atoi(loadEnv("SUBTITLE_TIME_GRANULARITY"))
 	if err != nil {
 		log.Fatalf("Failed to parse SUBTITLE_TIME_GRANULARITY: %v", err)
+	}
+
+	if !devMode {
+		logToFile()
 	}
 
 	// if is not absolute path, make it absolute
