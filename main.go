@@ -29,7 +29,7 @@ var (
 
 func checkEnv(key string) bool {
 	value := os.Getenv(key)
-	return value != ""
+	return value == "true"
 }
 
 func loadEnv(key string) string {
