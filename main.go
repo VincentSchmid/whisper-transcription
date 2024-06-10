@@ -48,17 +48,6 @@ func loadConfigFile() {
 	}
 }
 
-func logToFile() {
-	f, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
-
-	if err != nil {
-		log.Fatalf("error opening file: %v", err)
-	}
-	defer f.Close()
-
-	log.SetOutput(f)
-}
-
 func init() {
 	exePath, err := os.Executable()
 	if err != nil {
@@ -81,10 +70,6 @@ func init() {
 		log.Fatalf("Failed to parse SUBTITLE_TIME_GRANULARITY: %v", err)
 	}
 
-	if !devMode {
-		logToFile()
-	}
-
 	// if is not absolute path, make it absolute
 	if !filepath.IsAbs(audioDir) {
 		audioDir = filepath.Join(exeDir, audioDir)
@@ -104,6 +89,17 @@ func init() {
 }
 
 func main() {
+	if !devMode {
+		f, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+
+		if err != nil {
+			log.Fatalf("error opening file: %v", err)
+		}
+		defer f.Close()
+
+		log.SetOutput(f)
+	}
+
 	openaiClient := openai.NewClient(openaiKey)
 
 	createFolders()
