@@ -3,6 +3,8 @@
 ## Beschreibung
 Dieses Script sendet die Audiodateien an OpenAI Whisper. Whisper transkribiert die Texte mit genauer Zeitangabe. Jedoch sind die Texte dann nicht zwingend auf Schweizerdeutsch. Anschliessend wird das Resultat an ChatGPT gesendet, um es so genau wie möglich ins Schweizerdeutsch zu übersetzen.
 
+- Die Dateigrösse einer Audiodatei darf 25mb nicht überschreiten.
+
 ## Setup-Guide
 
 ### OpenAI Key erstellen
