@@ -172,7 +172,7 @@ func translateTranscriptions(openaiClient *openai.Client, inputDir string, fileS
 
 		if !info.IsDir() {
 			baseName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			resultPath := filepath.Join(outputDir, baseName+".txt")
+			resultPath := filepath.Join(outputDir, baseName+"_output.txt")
 
 			if strings.HasSuffix(baseName, fileSuffix) {
 
