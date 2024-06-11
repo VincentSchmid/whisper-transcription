@@ -15,6 +15,10 @@ import (
 	openai "github.com/sashabaranov/go-openai"
 )
 
+const (
+	maxFileSize = 25 * 1024 * 1024 // 25mb in bytes
+)
+
 var (
 	devMode                 bool
 	exeDir                  string
@@ -142,6 +146,12 @@ func transcribeAudioFiles(openaiClient *openai.Client, inputDir string, condesed
 			condensedTranscriptionPath := filepath.Join(outputDir, baseName+condesedSuffix+".vtt")
 
 			if !helpers.FileExists(outputDir, baseName+condesedSuffix+".vtt") {
+				if info.Size() > maxFileSize {
+					fileSizeInMb := fmt.Sprintf("%dmb", info.Size() / 1024 / 1024)
+					maxFileSizeInMb := fmt.Sprintf("%dmb", maxFileSize / 1024 / 1024)
+					return fmt.Errorf("file %s exceeds max file size of: %s set by openai. Actual filesize: %s", filepath.Base(path), maxFileSizeInMb, fileSizeInMb)
+				}
+
 				log.Printf("Transcribing audio file %s...\n", path)
 				transcription := helpers.Transcribe(openaiClient, transcribePrompt, path)
 
@@ -172,7 +182,7 @@ func translateTranscriptions(openaiClient *openai.Client, inputDir string, fileS
 
 		if !info.IsDir() {
 			baseName := strings.TrimSuffix(filepath.Base(path), filepath.Ext(path))
-			resultPath := filepath.Join(outputDir, baseName+"_output.txt")
+			resultPath := filepath.Join(outputDir, baseName + ".txt")
 
 			if strings.HasSuffix(baseName, fileSuffix) {
 
