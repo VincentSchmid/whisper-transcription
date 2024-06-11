@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -90,14 +91,15 @@ func init() {
 
 func main() {
 	if !devMode {
-		f, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		logFile, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
 		if err != nil {
 			log.Fatalf("error opening file: %v", err)
 		}
-		defer f.Close()
+		defer logFile.Close()
 
-		log.SetOutput(f)
+		mw := io.MultiWriter(os.Stdout, logFile)
+		log.SetOutput(mw)
 	}
 
 	openaiClient := openai.NewClient(openaiKey)
