@@ -3,6 +3,7 @@ package helpers
 import (
 	"fmt"
 	"testing"
+	"time"
 
 	subtitles "github.com/martinlindhe/subtitles"
 	"github.com/stretchr/testify/assert"
@@ -71,7 +72,10 @@ func TestLongFile(t *testing.T) {
 
 	condensedTranscript := ConcatSubs(subs, 30)
 
+	time32Seconds := condensedTranscript.Captions[0].Start.Add(32 * time.Second)
+
 	assert.Equal(t, 2, len(condensedTranscript.Captions))
 	assert.Equal(t, 2, len(condensedTranscript.Captions[0].Text))
 	assert.Equal(t, 1, len(condensedTranscript.Captions[1].Text))
+	assert.Equal(t, time32Seconds, condensedTranscript.Captions[1].Start)
 }
