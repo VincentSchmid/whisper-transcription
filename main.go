@@ -20,7 +20,6 @@ const (
 )
 
 var (
-	devMode                 bool
 	exeDir                  string
 	openaiKey               string
 	SubTitleTimeGranularity int
@@ -31,11 +30,6 @@ var (
 	chatGptPrompt           string
 	transcriptionSuffix     = "_restructured"
 )
-
-func checkEnv(key string) bool {
-	value := os.Getenv(key)
-	return value == "true"
-}
 
 func loadEnv(key string) string {
 	value := os.Getenv(key)
@@ -63,7 +57,6 @@ func init() {
 
 	loadConfigFile()
 
-	devMode = checkEnv("DEV_MODE")
 	openaiKey = loadEnv("OPENAI_API_KEY")
 	audioDir = loadEnv("AUDIO_DIR")
 	transcriptionDir = loadEnv("TRANSCRIPTION_DIR")
@@ -94,23 +87,21 @@ func init() {
 }
 
 func main() {
-	if !devMode {
-		logFile, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	logFile, err := os.OpenFile(filepath.Join(exeDir, "logs.log"), os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
 
-		if err != nil {
-			log.Fatalf("error opening file: %v", err)
-		}
-		defer logFile.Close()
-
-		mw := io.MultiWriter(os.Stdout, logFile)
-		log.SetOutput(mw)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
 	}
+	defer logFile.Close()
+
+	mw := io.MultiWriter(os.Stdout, logFile)
+	log.SetOutput(mw)
 
 	openaiClient := openai.NewClient(openaiKey)
 
 	createFolders()
 
-	err := transcribeAudioFiles(openaiClient, audioDir, transcriptionSuffix, transcriptionDir)
+	err = transcribeAudioFiles(openaiClient, audioDir, transcriptionSuffix, transcriptionDir)
 	if err != nil {
 		log.Println(err)
 	}
@@ -189,13 +180,14 @@ func translateTranscriptions(openaiClient *openai.Client, inputDir string, fileS
 				if !helpers.FileExists(outputDir, baseName+".txt") {
 					log.Printf("Reading Transcription from %s...\n", path)
 					transcriptionBytes, err := os.ReadFile(path)
+					transcription := string(transcriptionBytes)
 
 					if err != nil {
 						return fmt.Errorf("error reading file %s: %w", path, err)
 					}
 
 					log.Println("Translating with chat gpt...")
-					translatedResult, err := helpers.ChatGpt(openaiClient, chatGptPrompt, string(transcriptionBytes))
+					translatedResult, err := helpers.ChatGpt(openaiClient, chatGptPrompt, transcription)
 
 					if err != nil {
 						return fmt.Errorf("error translating file %s: %w", path, err)
